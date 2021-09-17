@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  database_yapmt:
+    image: postgres
+    container_name: database_yapmt
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=yapmt
+      - POSTGRES_DB=yapmt
+    volumes:
+      - pgdata:/data/postgres
+  app:
+    build: .
+    container_name: yapmt
+    ports:
+      - 8888:8888
+      - 9229:9229
+    volumes:
+      - .:/usr/app
+    links:
+      - database_yapmt
+    depends_on:
+      - database_yapmt
+
+volumes:
+  pgdata:
+    driver: local
