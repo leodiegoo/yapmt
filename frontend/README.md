@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-First, update your API URL in ** `src/services/api.ts`**, or add an environment variable **`NEXT_PUBLIC_API_URL` **.
+First, update your API URL in `src/services/api.ts`, or add an environment variable `NEXT_PUBLIC_API_URL`.
 
 ![](https://i.imgur.com/BomxOHH.png)
 
