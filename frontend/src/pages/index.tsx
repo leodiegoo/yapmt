@@ -78,8 +78,8 @@ const Home: NextPage = () => {
       await api.delete(`/projects/${id}`);
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries("projects");
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("projects");
         router.push("/");
       },
       onError: (error: AxiosError) => {
