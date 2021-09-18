@@ -1,5 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   Divider,
@@ -28,6 +34,9 @@ import Layout from "../components/Layout";
 
 const Home: NextPage = () => {
   const router = useRouter();
+  const [confirmDeleteIsOpen, setConfirmDeleteOpen] = useState(false);
+  const onCloseConfirmDelete = () => setConfirmDeleteOpen(false);
+  const cancelDelete = useRef<any>();
 
   const { projectId: queryProjectId = "" } = router.query;
 
@@ -82,6 +91,7 @@ const Home: NextPage = () => {
   const handleDeleteProject = async (id: string) => {
     try {
       await deleteProject.mutateAsync(id);
+      onCloseConfirmDelete();
     } catch (error) {
       console.error({ error });
     }
@@ -113,7 +123,7 @@ const Home: NextPage = () => {
                 size="xs"
                 variant="ghost"
                 colorScheme="red"
-                onClick={() => handleDeleteProject(selectedProjectId)}
+                onClick={() => setConfirmDeleteOpen(true)}
               >
                 <Icon as={RiDeleteBinLine} /> delete project
               </Button>
@@ -133,6 +143,36 @@ const Home: NextPage = () => {
           </VStack>
         </Flex>
       </Flex>
+      <AlertDialog
+        isOpen={confirmDeleteIsOpen}
+        leastDestructiveRef={cancelDelete}
+        onClose={onCloseConfirmDelete}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Project
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can not undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelDelete} onClick={onCloseConfirmDelete}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => handleDeleteProject(selectedProjectId)}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Layout>
   );
 };
